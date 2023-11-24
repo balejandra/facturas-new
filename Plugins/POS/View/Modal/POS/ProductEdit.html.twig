@@ -1,0 +1,53 @@
+{#
+/**
+ *  This file is part of POSpro plugin for FacturaScripts
+ *  Copyright (C) 2020 Juan José Prieto Dzul <juanjoseprieto88@gmail.com>
+ */
+#}
+<div id="productEditModal" class="modal hidden">
+    <!--content-->
+    <div class="modal-content">
+        <!--header-->
+        <div class="modal-header">
+            <h2 class="text-2xl text-slate-gray-700 font-semibold">{{ i18n.trans('edit') }}</h2>
+            <button class="btn btn-icon btn-danger ml-2" data-toggle="modal" data-target="productEditModal">
+                <i class="fa fw fa-times"></i>
+            </button>
+        </div>
+        <!--body-->
+        <div class="modal-body">
+            <div id="productEditForm" class="grid grid-cols-2 gap-4 items-end">
+            </div>
+        </div>
+    </div>
+</div>
+<script id="cartEditTemplate" type="text/template">
+    {% for column in grid %}
+        {%- if column.data == 'referencia' -%}
+            <div class="col-span-2 form-group">
+                <label for="{{ column.data }}" class="font-semibold uppercase">{{ column.tittle }} </label>
+                <input id="{{ column.data }}" type="{{ column.type }}" class=" font-normal form-control"
+                       value="<%= it.referencia %>" data-action="editProductFieldAction"
+                       data-index="<%= it.index %>" data-field="{{ column.data }}" readonly>
+            </div>
+        {%- elseif column.data == 'descripcion' %}
+            <div class="col-span-2 form-group">
+                <label for="{{ column.data }}" class="font-semibold uppercase">{{ column.tittle }}</label>
+                <textarea id="{{ column.data }}" class="font-normal form-control" rows="3"
+                          data-action="editProductFieldAction"
+                          data-index="<%= it.index %>" data-field="{{ column.data }}"
+                        {% if column.readonly %} readonly {% endif %}><%= it.descripcion %>
+                </textarea>
+            </div>
+        {% elseif column.eneabled -%}
+            <div class="form-group">
+                <label for="{{ column.data }}" class="font-semibold uppercase">{{ column.tittle }}</label>
+                <input id="{{ column.data }}" class="font-normal form-control" type="{{ column.type }}"
+                       value="<%= it.{{ column.data }} %>"
+                       step=".001" data-index="<%= it.index %>"
+                       data-action="{{ column.readonly ? '' : 'editProductFieldAction' }}"
+                       data-field="{{ column.data }}" {% if column.readonly %} readonly {% endif %}>
+            </div>
+        {% endif -%}
+    {% endfor %}
+</script>

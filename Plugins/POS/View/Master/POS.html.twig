@@ -1,0 +1,42 @@
+{#
+/**
+ *  This file is part of POS plugin for FacturaScripts
+ *  Copyright (C) 2020 Juan José Prieto Dzul <juanjoseprieto88@gmail.com>
+ */
+#}
+{% extends 'Master/MicroTemplate.html.twig' %}
+{% block css %}
+    <link rel="stylesheet" href="{{ asset('node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('Dinamic/Assets/CSS/pos.app.min.css?v=2.2') }}"/>
+    <link rel="manifest" href="{{ asset('Plugins/POS/Assets/JS/manifest.json') }}" />
+{% endblock %}
+{% block javascripts %}
+{% endblock %}
+{% block fullBody %}
+    <body class="bg-slate-100 text-slate-800">
+    {% block messages %}
+        <div id="alert-container" class="alert-container opacity-90">
+            {{- _self.alert(log, ['warning', 'error', 'critical'], 'warning') -}}
+            {{- _self.alert(log, ['notice'], 'success') -}}
+            {{- _self.alert(log, ['info'], 'info') -}}
+        </div>
+    {% endblock %}
+    {% block body %}
+    {% endblock %}
+    {% block modals %}
+    {% endblock %}
+    {% block js %}
+    {% endblock %}
+    </body>
+{% endblock %}
+
+{% macro alert(log, types, style) %}
+    {%- set messages = log.read('', types) -%}
+    {%- if messages | length > 0 -%}
+        <div class="alert alert-{{ style }}" role="alert" data-delay="2000">
+            {% for msg in messages %}
+                <div>{{ msg.message | raw }}</div>
+            {% endfor %}
+        </div>
+    {%- endif -%}
+{% endmacro %}

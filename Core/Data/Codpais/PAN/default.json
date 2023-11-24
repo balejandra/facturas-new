@@ -1,0 +1,16 @@
+{
+    "default": {
+        "coddivisa": "PAB",
+        "codimpuesto": "ITBMS",
+        "codserie": "A",
+        "codpago": "CONT",
+        "tipoidfiscal": "RUC",
+        "validate_iban": false
+    },
+    "email": {
+        "enc": "ssl",
+        "host": "smtp.gmail.com",
+        "mailer": "smtp",
+        "port": "465"
+    }
+}

@@ -1,0 +1,57 @@
+<form id="formTicketSettings" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="save-settings">
+    <div class="card">
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{ i18n.trans('print-ticket-line-lenght') }}</label>
+                        {% set linelength = appSettings.get('ticket', 'linelength', 50) %}
+                        <input type="text" name="linelength" value="{{ linelength }}" class="form-control" required="">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{ i18n.trans('print-logo-command') }}</label>
+                        {% set command = appSettings.get('ticket', 'logocommand', '28.112.1.3') %}
+                        <input type="text" name="logocommand" value="{{ command }}" class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{ i18n.trans('ticket-top-white-space') }}</label>
+                        {% set space = appSettings.get('ticket', 'ticket-top-space', 2) %}
+                        <input type="text" name="top-space" value="{{ space }}" class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{ i18n.trans('ticket-bottom-white-space') }}</label>
+                        {% set space = appSettings.get('ticket', 'ticket-bottom-space', 2) %}
+                        <input type="text" name="bottom-space" value="{{ space }}" class="form-control">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Texto al pie del ticket</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-comment"></i></span>
+                            </div>
+                            {% set footertext = appSettings.get('ticket', 'footertext') %}
+                            <input type="text" name="footertext" value="{{ footertext }}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-right">
+                    <button class="btn btn-sm btn-primary" type="submit">
+                        <i class="fas fa-save fa-fw" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline-block">Guardar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

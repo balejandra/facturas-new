@@ -1,0 +1,28 @@
+<div class="modal hidden" id="productImagesModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="text-2xl text-slate-gray-700 font-semibold">{{ i18n.trans('images') }}</h2>
+            <button class="btn btn-icon btn-danger ml-2" data-toggle="modal" data-target="productImagesModal">
+                <i class="fa fw fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="productImageListView">
+            </div>
+        </div>
+    </div>
+</div>
+<script id="productImageListTemplate" type="text/template">
+    <% if(it.items.length === 0) { %>
+    <tr>
+        <td colspan="20" class="p-4">No se encontraron imagenes</td>
+    </tr>
+    <% } %>
+    <div class="divide-y-4 divide-dotted">
+        <% it.items.forEach(function(item){ %>
+        <div class="flex-1">
+            <img class="mx-auto py-2" src="<%= item %>" alt="Imagen Producto">
+        </div>
+        <% }) %>
+    </div>
+</script>
