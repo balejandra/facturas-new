@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of FacturaScripts
  * Copyright (C) 2018-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
@@ -60,6 +61,7 @@ class Updater extends Controller
         $data['menu'] = 'admin';
         $data['title'] = 'updater';
         $data['icon'] = 'fas fa-cloud-download-alt';
+        $data['showonmenu'] = false;
         return $data;
     }
 
