@@ -21,20 +21,6 @@
 </div> #}
 <div class="mb-4 flex-1 overflow-y-auto px-4">
     <div id="productSearchResult" role="list">
-        <div role="listitem" class="mb-4 flex cursor-pointer rounded-lg bg-white p-4 shadow-sm product-add-btn"
-             data-action="setProductAction" data-code="" data-description="Producto Generico">
-            <div class="mr-4 flex items-center">
-                <span class="text-sky-500"><i class="fas fa-2x fa-tags"></i></span>
-            </div>
-            <div class="flex-1 text-sm">
-                <p class="text-gray-600 text-[.90rem]">
-                    <span class="font-semibold uppercase text-gray-800">XXX-XXX</span> PRODUCTO DE ENTRDA LIBRE</p>
-                <span class="mt-1 inline-block rounded-full bg-green-100 px-3 font-semibold text-green-800 text-[0.85rem] py-0.5">
-                    {{ fsc.toolBox().coins().format(0) }}</span>
-                <span class="mt-1 inline-block rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-[0.85rem] py-0.5">
-                    &infin; {{ i18n.trans('unlimited') }}</span>
-            </div>
-        </div>
         {% for product in fsc.getHomeProducts() %}
             <div role="listitem" class="mb-4 flex cursor-pointer rounded-lg bg-white p-4 shadow-sm product-add-btn"
                  data-action="setProductAction" data-code="{{ product.code }}"
@@ -76,21 +62,6 @@
     </button>
 </div>
 <script id="productListTemplate" type="text/template">
-    <div role="listitem" class="mb-4 flex cursor-pointer rounded-lg bg-white p-4 shadow-sm product-add-btn"
-         data-action="setProductAction" data-code="" data-description="Producto Generico">
-        <div class="mr-4 flex items-center">
-            <span class="text-sky-500"><i class="fas fa-2x fa-tags"></i></span>
-        </div>
-        <div class="flex-1 text-sm">
-            <p class="text-gray-600 text-[.90rem]"><span class="font-semibold uppercase text-gray-800">XXX-XXX</span>
-                PRODUCTO DE ENTRDA LIBRE</p>
-            <span class="mt-1 inline-block rounded-full bg-green-100 px-3 font-semibold text-green-800 text-[0.85rem] py-0.5">
-                {{ fsc.toolBox().coins().format(0) }}
-            </span>
-            <span class="mt-1 inline-block rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-[0.85rem] py-0.5">
-                    &infin; {{ i18n.trans('unlimited') }}</span>
-        </div>
-    </div>
     <% it.items.forEach(function(item){ %>
     <div role="listitem" class="mb-4 flex cursor-pointer rounded-lg bg-white p-4 shadow-sm"
          data-action="setProductAction" data-code="<%= item.code %>" data-description="<%= item.description %>">
