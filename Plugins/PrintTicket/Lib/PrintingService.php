@@ -61,12 +61,13 @@ class PrintingService
     }
 
 
-    public function savePrintJob(): void
+    public function savePrintJob(): Ticket
     {
         $ticket = new Ticket();
 
         $ticket->coddocument = $this->builder->getTicketType() . bin2hex(random_bytes(5));
-        $ticket->text = $this->builder->getResult();
+        //$ticket->text = $this->builder->getResult();
+        $ticket->text = $this->builder->getDataAsArray();
 
         if (false === $ticket->save()) {
             $this->setErrorMessage();
@@ -74,7 +75,8 @@ class PrintingService
             $this->setMessage($ticket->coddocument);
         }
 
-        $this->setResponse($ticket->coddocument);
+        //$this->setResponse($ticket->coddocument);
+        return $ticket;
     }
 
     private function setResponse(string $code): void

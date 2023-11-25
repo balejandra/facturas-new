@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of POS plugin for FacturaScripts
  * Copyright (C) 2022 Juan José Prieto Dzul <juanjoseprieto88@gmail.com>
@@ -319,9 +320,10 @@ class POS extends Controller
 
         if ($code) {
             $order = self::getOrder($code);
-            $this->printVoucher($order->getDocument(), []);
+            $voucher = $this->printVoucher($order->getDocument(), []);
 
-            $this->buildResponse();
+            //$this->buildResponse();
+            $this->setResponse($voucher);
         }
     }
 

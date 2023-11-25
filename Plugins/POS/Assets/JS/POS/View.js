@@ -179,6 +179,23 @@ class Main {
         modals().stockDetailModal().show();
         templates().renderProductStockList({items: data});
     }
+    showticketImpresion = function (data) {
+		modals().ticketImpresionModal().show();
+		console.log(data);
+
+		templates().renderticketimpresion({ items: data });
+		// Obtener el contenido del div que deseas imprimir
+		/*let contenidoDiv = document.getElementById("ticket").innerHTML;
+		// Abrir la ventana de impresión y escribir el contenido del div en ella
+		let ventanaImpresion = window.open("", "_blank");
+		ventanaImpresion.document.write(
+			"<html><body>" + contenidoDiv + "</body></html>"
+		);
+		// Imprimir la ventana de impresión
+		ventanaImpresion.print();
+		ventanaImpresion.close();
+		modals().ticketImpresionModal().hide();*/
+	};
 }
 
 /**

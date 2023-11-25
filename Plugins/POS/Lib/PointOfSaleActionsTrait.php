@@ -108,9 +108,10 @@ trait PointOfSaleActionsTrait
         $ticketBuilder = new PointOfSaleVoucher($document, $payments, $format);
 
         $ticket = new PrintingService($ticketBuilder);
-        $ticket->savePrintJob();
+        $print = $ticket->savePrintJob();
 
-        return $ticket->getMessage();
+        //return $ticket->getMessage();
+        return $print;
     }
 
     public static function printOrderTicket(string $code, ?FormatoTicket $format = null)

@@ -104,6 +104,11 @@ abstract class AbstractTicketBuilder
     abstract protected function buildFooter(): void;
 
     /**
+     * @return array
+     */
+    abstract public function getDataAsArray(): array;
+
+    /**
      * @return string
      */
     abstract public function getResult(): string;

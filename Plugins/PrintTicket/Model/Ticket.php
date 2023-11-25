@@ -36,4 +36,16 @@ class Ticket extends Base\ModelClass
     {
         return 'tickets';
     }
+
+    protected function saveInsert(array $values = []): bool
+    {
+        return parent::saveInsert([
+            'text' => json_encode($this->text)
+        ]);
+    }
+
+    protected function saveUpdate(array $values = []): bool
+    {
+        return parent::saveUpdate(['text' => json_encode($this->text)]);
+    }
 }

@@ -12,6 +12,8 @@ let modals = {
     holdOrders: new ModalElement('holdOrdersModal'),
     lastOrders: new ModalElement('lastOrdersModal'),
 
+    ticketImpresion: new ModalElement("ticketImpresionModal"),
+
     paymentDetail: new ModalElement('paymentModal'),
 
     productEdit: new ModalElement('productEditModal'),
@@ -87,6 +89,7 @@ class Modals {
     closeSessionModal = () => modals['closeSession'];
     customerSearchModal = () => modals['customerSearch'];
     lastOrdersModal = () => modals['lastOrders'];
+    ticketImpresionModal = () => modals["ticketImpresion"];
     pausedOrdersModal = () => modals['holdOrders'];
     stockDetailModal = () => modals['productStockDetail'];
     paymentModal = () => modals['paymentDetail'];

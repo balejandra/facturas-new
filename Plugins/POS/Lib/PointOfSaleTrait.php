@@ -316,7 +316,8 @@ trait PointOfSaleTrait
     {
         $message = self::printDocumentTicket($document, $payments, $this->getVoucherFormat());
 
-        $this->toolBox()->log()->info($message);
+        //$this->toolBox()->log()->info($message);
+        return $message;
     }
 
     /**
