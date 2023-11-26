@@ -136,8 +136,8 @@
 									<% }else{ %>
 										<td><%= line.cantidad %></td>
 										<td><%= line.referencia %></td>
-										<td><%= line.pvpunitario %></td>
-										<td><%= line.totalunitario %></td>
+										<td><%= line.pvpunitario %>$</td>
+										<td><%= line.totalunitario %>$</td>
 									<% }%>
 								</tr>
 							<% }) %>
@@ -155,15 +155,15 @@
 								</tr>
 								<tr>
 									<td colspan="3">Base:</td>
-									<td align="right"><%=it.items.text.neto %></td>
+									<td align="right"><%=it.items.text.neto %>$</td>
 								</tr>
 								<tr>
 									<td colspan="3">IVA</td>
-									<td align="right"><%=it.items.text.totaliva %></td>
+									<td align="right"><%=it.items.text.totaliva %>$</td>
 								</tr>
 								<tr>
 									<td colspan="3">Total:</td>
-									<td align="right"><%=it.items.text.total %></td>
+									<td align="right"><%=it.items.text.total %>$</td>
 								</tr>
 							<% }%>
 							<tr class="sup">
