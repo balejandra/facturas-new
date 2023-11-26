@@ -69,6 +69,45 @@ class PointOfSaleClosingVoucher extends AbstractTicketBuilder
         $this->printer->textCentered('FIRMA');
     }
 
+    /**
+     * @return array
+     */
+    public function getDataAsArray(): array
+    {
+        $data = [
+            'tipo_ticket' => 'closing_ticket',
+            'nombrecorto' => $this->company->nombrecorto,
+            'direccion' => $this->company->direccion,
+            'telefono1' => $this->company->telefono1,
+            'cifnif' => $this->company->cifnif,
+            'codigo' =>  $this->session->getID(),
+            'cierre_desde' => $this->session->fechainicio,
+            'cierre_hasta' => $this->session->fechafin,
+            'saldo_inicial' => $this->session->saldoinicial,
+            'total_esperado' => $this->session->saldoesperado,
+            'total_contado' =>  $this->session->saldocontado,
+            'anchoFormato' => $this->formato->ancho,
+            'lines' => [],
+        ];
+
+        foreach ($this->session->getPaymentsAmount() as $payment) {
+            $this->printer->textKeyValue(strtoupper($payment['descripcion']), $payment['total']);
+        }
+
+        $lineData = [];
+        foreach ($this->session->getPaymentsAmount() as $payment) {
+
+            $lineData = [
+                'payment_descripcion' => $payment['descripcion'],
+                'payment_total' => $payment['total'],
+            ];
+            $data['lines'][] = $lineData;
+        }
+
+        $this->printer->getBuffer();
+        return $data;
+    }
+
     public function getResult(): string
     {
         $this->buildHeader();

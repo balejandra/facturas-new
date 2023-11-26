@@ -96,6 +96,14 @@ export function getProductImages(id, code) {
 }
 
 /**
+ * @param {FormData} formData
+ */
+export function printCloseCash(formData) {
+    formData.set('action', 'close-cash');
+    return postRequest(formData);
+}
+
+/**
  * @param {string} code
  * @param {string} madre
  */

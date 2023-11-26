@@ -92,9 +92,10 @@ trait PointOfSaleActionsTrait
         $ticketBuilder = new PointOfSaleClosingVoucher($session, $company, $format);
 
         $cashupTicket = new PrintingService($ticketBuilder);
-        $cashupTicket->savePrintJob();
+        $print = $cashupTicket->savePrintJob();
 
-        return $cashupTicket->getMessage();
+        //return $cashupTicket->getMessage();
+        return $print;
     }
 
     /**

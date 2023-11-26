@@ -126,6 +126,16 @@ class SesionPuntoVenta extends Base\ModelClass
     }
 
     /**
+     * Return current SesionPuntoVenta ID.
+     *
+     * @return string
+     */
+    public function getID(): string
+    {
+        return $this->idsesion;
+    }
+    
+    /**
      * @return PagoPuntoVenta[]
      */
     public function getPayments(): array

@@ -9,7 +9,7 @@ const templates = {
     cartList: getElement('cartListTemplate').innerHTML,
     customerList: getElement('customerListTemplate').innerHTML,
     lastOrdersList: getElement('lastOrdersListTemplate').innerHTML,
-    ticketImpresionList: getElement("ticketImpresion").innerHTML,
+    ticketPrintList: getElement("ticketPrintTemplate").innerHTML,
     messageList: getElement('message-template').innerHTML,
     pausedOrdersList: getElement('pausedOrdersListTemplate').innerHTML,
     paymentList: getElement('paymentListTemplate').innerHTML,
@@ -24,7 +24,7 @@ const views = {
     cartList: getElement('cartListView'),
     customerList: getElement('customerSearchResult'),
     lastOrdersList: getElement('lastOrdersList'),
-    ticketImpresionList: getElement("ticketImpresionList"),
+    ticketPrintList: getElement("ticketPrintList"),
     messageList: getElement('alert-container'),
     pausedOrdersList: getElement('pausedOrdersList'),
     paymentList: getElement('paymentList'),
@@ -50,7 +50,7 @@ class Templates {
     renderCartList = (data) => this.render('cartList', data);
     renderCustomerList = (data) => this.render('customerList', data);
     renderLastOrderList = (data) => this.render('lastOrdersList', data);
-    renderticketimpresion = (data) => this.render("ticketImpresionList", data);
+    renderTicketPrint = (data) => this.render("ticketPrintList", data);
     renderPaymentList = (data) => this.render('paymentList', data);
     renderPausedOrderList = (data) => this.render('pausedOrdersList', data);
     renderProductFamilyList = (data) => this.render('productFamilyList', data);

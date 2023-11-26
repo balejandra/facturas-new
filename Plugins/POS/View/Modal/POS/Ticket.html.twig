@@ -1,6 +1,7 @@
 <style>
 	.ticket,
 	.printer-ticket {
+
 		font-family: Tahoma, Geneva, sans-serif;
 		font-size: 12px;
 	}
@@ -8,181 +9,264 @@
 		border-bottom: 1px solid black;
 		padding-bottom: 10px;
 	}
+
 	.centrado {
 		text-align: center;
 		align-content: center;
 	}
+
 	.text-center {
 		text-align: center;
 	}
+
 	.printer-ticket {
 		display: table !important;
 		width: 100%;
 		font-weight: light;
 		line-height: 1.3em;
 	}
+
 	.printer-ticket,
 	.printer-ticket * {
 		background-color: #fff;
 	}
+
 	.printer-ticket th:nth-child(1),
 	.printer-ticket td:nth-child(1) {
 		width: 50px;
 	}
+
 	.printer-ticket th:nth-child(3) {
 		width: 90px;
 	}
+
 	.printer-ticket td:nth-child(3),
 	.printer-ticket td:nth-child(4) {
 		width: 90px;
 		text-align: right;
 	}
+
 	.printer-ticket th {
 		font-weight: inherit;
 		padding: 10px 0;
 		text-align: center;
 		border-bottom: 1px dashed #BCBCBC;
 	}
+
 	.printer-ticket tbody tr:last-child td {
 		padding-bottom: 10px;
 	}
+
 	.printer-ticket tfoot .sup td {
 		padding: 10px 0;
 		border-top: 1px dashed #BCBCBC;
 	}
+
 	.printer-ticket tfoot .sup.p--0 td {
 		padding-bottom: 0;
 	}
+
 	.printer-ticket .top td {
 		padding-top: 10px;
 	}
+
 	.printer-ticket .last td {
 		padding-bottom: 10px;
 	}
 </style>
-<div id="ticketImpresionModal" class="hidden modal">
+<div id="ticketPrintModal" class="hidden modal">
 	<div class="h-full modal-content md:modal-content-lg">
 		<div class="modal-header">
-			<button class="ml-2 btn btn-icon btn-danger" data-toggle="modal" data-target="ticketImpresionModal">
+			<button class="ml-2 btn btn-icon btn-danger" data-toggle="modal" data-target="ticketPrintModal">
 				<i class="fa fw fa-times"></i>
 			</button>
 		</div>
 		<div class="modal-body">
-			<div id="ticketImpresionList"></div>
+			<div id="ticketPrintList"></div>
+
 		</div>
 
 	</div>
 </div>
-<script id="ticketImpresion" type="text/template">
-	<div id="ticketPrint">
-	<div class="ticket" style="width:<%=it.items.text.anchoFormato %>%;margin-top:30px;margin-bottom=30px;">
+<script id="ticketPrintTemplate" type="text/template">
+	<div id="ticketPrintingArea">
+		<div class="ticket" style="width:<%=it.items.text.anchoFormato %>%;margin-top:30px;margin-bottom=30px;">
 			<% if(it.items.length === 0) { %>
 				<div class="flex flex-1 rounded-lg bg-blue-100 p-2 shadow-sm md:flex-row">
 					<span>{{ i18n.trans('no-data') }}</span>
 				</div>
 			<% } else{ %>
-				<div>
-					<p class="centrado"><%=it.items.text.nombrecorto %>
-						<br><%=it.items.text.direccion %>
-						<br><%=it.items.text.cifnif %></p>
-					<p class="centrado linea-divisora"></p>
-					<p class="centrado">Comprobante:
-						<%=it.items.text.codigo %>
-					</p>
-					<p class="centrado">
-						<br><%=it.items.text.fechacompleta %>
-						<br>Cliente:
-						<%=it.items.text.cliente %></p>
-					<p class="centrado linea-divisora"></p>
-					<% if(it.items.text.headerCustomLines.length> 0) { %>
-						<% it.items.text.headerCustomLines.forEach(function(header) { %>
-							<p class="centrado">
-								<%=header %></p>
-						<% }) %>
-					<% } %>
-					<br>
-					<table class="printer-ticket">
-						<thead>
-							<tr>
-								<% if(it.items.text.formato_precio=== 3) { %>
-									<th colspan="2">
-										<b>CANT</b>
-									</th>
-									<th colspan="2">
-										<b>ARTICULOS</b>
-									</th>
-								<% }else{ %>
-									<th>
-										<b>CANT</b>
-									</th>
-									<th>
-										<b>ARTICULOS</b>
-									</th>
-									<th>
-										<b>PRECIO</b>
-									</th>
-									<th>
-										<b>IMPORTE</b>
-									</th>
-								<% }%>
-							</tr>
-						</thead>
-						<tbody>
-							<% it.items.text.lines.forEach(function(line) { %>
+				<% if(it.items.text.tipo_ticket === 'sale_ticket') { %>
+					<div>
+						<p class="centrado"><%=it.items.text.nombrecorto %>
+							<br><%=it.items.text.direccion %>
+							<br><%=it.items.text.cifnif %></p>
+						<p class="centrado linea-divisora"></p>
+						<p class="centrado">Comprobante:
+							<%=it.items.text.codigo %>
+						</p>
+						<p class="centrado">
+							<br><%=it.items.text.fechacompleta %>
+							<br>Cliente:
+							<%=it.items.text.cliente %></p>
+						<p class="centrado linea-divisora"></p>
+						<% if(it.items.text.headerCustomLines.length> 0) { %>
+							<% it.items.text.headerCustomLines.forEach(function(header) { %>
+								<p class="centrado">
+									<%=header %></p>
+							<% }) %>
+						<% } %>
+						<br>
+						<table class="printer-ticket">
+							<thead>
 								<tr>
 									<% if(it.items.text.formato_precio=== 3) { %>
-										<td colspan="2"><%= line.cantidad %></td>
-										<td colspan="2"><%= line.referencia %></td>
+										<th colspan="2">
+											<b>CANT</b>
+										</th>
+										<th colspan="2">
+											<b>ARTICULOS</b>
+										</th>
 									<% }else{ %>
-										<td><%= line.cantidad %></td>
-										<td><%= line.referencia %></td>
-										<td><%= line.pvpunitario %>$</td>
-										<td><%= line.totalunitario %>$</td>
+										<th>
+											<b>CANT</b>
+										</th>
+										<th>
+											<b>ARTICULOS</b>
+										</th>
+										<th>
+											<b>PRECIO</b>
+										</th>
+										<th>
+											<b>IMPORTE</b>
+										</th>
 									<% }%>
 								</tr>
-							<% }) %>
-							<tr>
-								<td colspan="4"><br>Total de articulos:
-									<%=it.items.text.totalArticulos %></td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<% if(it.items.text.formato_precio!== 3) { %>
-								<tr class="sup p--0">
-									<td colspan="4">
-										<b>Totales</b>
+							</thead>
+							<tbody>
+								<% it.items.text.lines.forEach(function(line) { %>
+									<tr>
+										<% if(it.items.text.formato_precio=== 3) { %>
+											<td colspan="2"><%= line.cantidad %></td>
+											<td colspan="2"><%= line.referencia %></td>
+										<% }else{ %>
+											<td><%= line.cantidad %></td>
+											<td><%= line.referencia %></td>
+											<td><%= line.pvpunitario %>$</td>
+											<td><%= line.totalunitario %>$</td>
+										<% }%>
+									</tr>
+								<% }) %>
+								<tr>
+									<td colspan="4"><br>Total de articulos:
+										<%=it.items.text.totalArticulos %></td>
+								</tr>
+							</tbody>
+
+							<tfoot>
+								<% if(it.items.text.formato_precio!== 3) { %>
+									<tr class="sup p--0">
+										<td colspan="4">
+											<b>Totales</b>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3">Base:</td>
+										<td align="right"><%=it.items.text.neto %>$</td>
+									</tr>
+									<tr>
+										<td colspan="3">IVA</td>
+										<td align="right"><%=it.items.text.totaliva %>$</td>
+									</tr>
+									<tr>
+										<td colspan="3">Total:</td>
+										<td align="right"><%=it.items.text.total %>$</td>
+									</tr>
+								<% }%>
+								<tr class="sup">
+									<td colspan="4" align="center">
+										<b>Comprobante:
+											<%=it.items.text.codigo %></b>
+
 									</td>
 								</tr>
-								<tr>
-									<td colspan="3">Base:</td>
-									<td align="right"><%=it.items.text.neto %>$</td>
-								</tr>
-								<tr>
-									<td colspan="3">IVA</td>
-									<td align="right"><%=it.items.text.totaliva %>$</td>
-								</tr>
-								<tr>
-									<td colspan="3">Total:</td>
-									<td align="right"><%=it.items.text.total %>$</td>
-								</tr>
-							<% }%>
-							<tr class="sup">
-								<td colspan="3" align="center">
-									<b>Comprobante:
-										<%=it.items.text.codigo %></b>
-								</td>
+							</tfoot>
+
+						</table>
+						<br>
+						<% if(it.items.text.footerCustomLines.length> 0) { %>
+							<% it.items.text.footerCustomLines.forEach(function(footer) { %>
+								<p class="centrado">
+									<%=footer %></p>
+							<% }) %>
+						<% } %>
+					</div>
+				<% }else if (it.items.text.tipo_ticket === 'closing_ticket'){ %>
+					<div>
+						<p class="centrado"><%=it.items.text.nombrecorto %>
+							<br><%=it.items.text.direccion %>
+							<br><%=it.items.text.cifnif %></p>
+						<p class="centrado linea-divisora"></p>
+						<p class="centrado">Arqueo Nro.:
+							<%=it.items.text.codigo %>
+						</p>
+						<p class="centrado linea-divisora"></p>
+						<p class="centrado">
+							<b>CIERRE</b>
+						</p>
+						<br>
+						<p>
+							<b>Desde:</b>
+							<%=it.items.text.cierre_desde %>
+							<b>Hasta:</b>
+							<%=it.items.text.cierre_hasta %></p>
+						<br><b>Saldo Inicial:</b>
+						<%=it.items.text.saldo_inicial %>$
+						<p class="centrado">
+							<b>RESUMEN DE PAGOS</b>
+						</p>
+					</p>
+				</p>
+				<br>
+				<table class="printer-ticket">
+					<thead>
+						<tr>
+							<th style="width:50%;">
+								<b>FORMA DE PAGO</b>
+							</th>
+							<th>
+								<b>TOTAL</b>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% it.items.text.lines.forEach(function(line) { %>
+							<tr>
+								<td style="width:50%;"><%= line.payment_descripcion %></td>
+								<td align="right"><%= line.payment_total %>$</td>
 							</tr>
-						</tfoot>
-					</table>
-					<br>
-					<% if(it.items.text.footerCustomLines.length> 0) { %>
-						<% it.items.text.footerCustomLines.forEach(function(footer) { %>
-							<p class="centrado">
-								<%=footer %></p>
 						<% }) %>
-					<% } %>
-				</div>
-			<% }%>
-		</div>
-	</div>
-</script>
+					</tbody>
+
+					<tfoot>
+						<tr class="sup p--0">
+							<td style="width:50%;">Total Esperado:</td>
+							<td align="right"><%=it.items.text.total_esperado %>$</td>
+						</tr>
+						<tr>
+							<td style="width:50%;">Total Contado:</td>
+							<td align="right"><%=it.items.text.total_contado %>$</td>
+						</tr>
+						<tr class="sup">
+							<td colspan="2" align="center">
+								<b>Firma:</b>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+				<br>
+			</div>
+		<% }%>
+	<%}%>
+</div></div></script>
+

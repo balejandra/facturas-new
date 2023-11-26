@@ -25,7 +25,7 @@ async function orderDeleteAction(data) {
 async function orderPrintAction({ code }) {
 	await Order.reprintRequest(code);
 	View.modals().lastOrdersModal().hide();
-	View.main().showticketImpresion(await Order.reprintRequest(code));
+	View.main().showTicketPrint(await Order.reprintRequest(code));
 }
 
 /**
@@ -33,7 +33,7 @@ async function orderPrintAction({ code }) {
  */
 async function pausedOrderPrintAction({ code }) {
 	//await Order.reprintPausedOrderRequest(code);
-	View.main().showticketImpresion(await Order.reprintPausedOrderRequest(code)
+	View.main().showTicketPrint(await Order.reprintPausedOrderRequest(code)
 );
 	View.modals().pausedOrdersModal().hide();
 }
@@ -67,11 +67,13 @@ async function orderSaveAction() {
 	//Cart.update(await Order.saveRequest(Cart, Checkout.payments));
 	var ticket = await Order.saveRequest(Cart, Checkout.payments);
 	Cart.update(ticket);
-    View.main().showticketImpresion(ticket);
+    View.main().showTicketPrint(ticket);
 	Checkout.clear();
 
 	Cart.setDocumentType(AppSettings.document.code, AppSettings.document.serie);
 	View.main().updateDocumentNameLabel(AppSettings.document.description);
+	// Refrescar la página inmediatamente
+	location.reload();
 }
 
 async function orderSuspendAction() {
@@ -111,7 +113,13 @@ async function searchProductAction() {
 	View.main().updateProductSearchResult(await Core.searchProduct(this.value));
 }
 
-function sessionCloseAction() {
+/*function sessionCloseAction() {
+	View.main().closeSessionForm().submit();
+}*/
+async function sessionCashAction() {
+	let form = View.main().closeSessionForm();
+	let formData = new FormData(form);
+	View.main().showTicketPrint(await Core.printCloseCash(formData));
 	View.main().closeSessionForm().submit();
 }
 
@@ -120,7 +128,7 @@ function sessionMoneyMovmentAction() {
 }
 
 async function sessionPrintClosingVoucherAction() {
-	await Core.printClosingVoucher();
+	View.main().showTicketPrint(await Core.printClosingVoucher());
 	View.modals().closeSessionModal().hide();
 }
 
@@ -158,8 +166,11 @@ async function appEventHandler(event) {
 	}
 
 	switch (action) {
-		case "closeSessionAction":
-			return sessionCloseAction();
+		/*case "closeSessionAction":
+			return sessionCloseAction();*/
+
+		case "closeCashAction":
+			return sessionCashAction();
 
 		case "deleteOrderAction":
 			return orderDeleteAction(data);

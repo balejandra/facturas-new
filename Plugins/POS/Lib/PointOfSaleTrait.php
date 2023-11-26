@@ -329,7 +329,8 @@ trait PointOfSaleTrait
     {
         $message = self::printCashupTicket($this->session->getSession(), $this->empresa, $this->getVoucherFormat());
 
-        $this->toolBox()->log()->info($message);
+        //$this->toolBox()->log()->info($message);
+        return $message;
     }
 
     /**
