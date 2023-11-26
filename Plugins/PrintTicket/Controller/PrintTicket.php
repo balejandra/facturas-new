@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PrintTicket plugin for FacturaScripts
  * Copyright (C) 2018-2019 Juan José Prieto Dzul <juanjoseprieto88@gmail.com>
@@ -86,7 +87,8 @@ class PrintTicket extends Controller
                 $this->response->setContent(json_encode($this->getFormatFromDocument()));
                 return true;
             case 'print-document':
-                $this->newPrintJob();
+                $ticket = $this->newPrintJob();
+                $this->response->setContent(json_encode($ticket));
                 return true;
             default:
                 return false;
@@ -119,7 +121,7 @@ class PrintTicket extends Controller
     /**
      * @return void
      */
-    protected function newPrintJob(): void
+    protected function newPrintJob()
     {
         $documentCode = $this->request->request->get('codigo');
         $formatCode = $this->request->request->get('formato');
@@ -135,9 +137,10 @@ class PrintTicket extends Controller
         $ticketBuilder = new SalesTicket($document, $ticketFormat);
 
         $salesTicket = new PrintingService($ticketBuilder);
-        $salesTicket->savePrintJob();
+        $ticket = $salesTicket->savePrintJob();
 
-        echo $salesTicket->getResponse();
+        //echo $salesTicket->getResponse();
+        return $ticket;
     }
 
     protected function sendPrintJob($modelName, $code, bool $gift): void

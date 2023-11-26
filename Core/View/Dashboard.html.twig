@@ -117,107 +117,16 @@
 	</div>
 {% endmacro %}
 
-{% macro sectionLinks(fsc) %}
-	<div class="card shadow mb-3">
-		<div class="pl-3 pt-1 pr-3 pb-3">
-			<div class="form-row">
-				<div class="col-md">
-					<h2 class="h4 mt-3 mb-1">
-						<i class="fas fa-plus fa-fw"></i>
-						{{ trans('create') }}
-					</h2>
-					<ul class="mb-1">
-						{% for link, label in fsc.createLinks %}
-							<li>
-								<a href="{{ link }}">{{ trans(label) }}</a>
-							</li>
-						{% endfor %}
-					</ul>
-				</div>
-				{% if fsc.openLinks %}
-					<div class="col-md">
-						<h2 class="h4 mt-3 mb-1">
-							<i class="fas fa-folder-open fa-fw"></i>
-							{{ trans('open') }}
-						</h2>
-						<ul class="mb-1">
-							{% for link in fsc.openLinks %}
-								<li>
-									{{ trans(link.type) }}
-									<a href="{{ link.url }}">{{ link.name }}</a>
-									<span class="text-muted">{{ link.date }}</span>
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-				{% endif %}
-			</div>
-		</div>
-	</div>
-{% endmacro %}
+{% macro sectionLinks(fsc) %}{% endmacro %}
 
-{% macro sectionLowStock(fsc) %}
-	<div class="card shadow mb-3">
-		<div class="p-3">
-			<h2 class="h4 mb-0">
-				<i class="fas fa-pallet fa-fw"></i>
-				{{ trans('minimum-stock') }}
-			</h2>
-		</div>
-		<div class="table-responsive">
-			<table class="table table-sm table-hover mb-0">
-				<thead>
-					<tr>
-						<th>{{ trans('reference') }}</th>
-						<th>{{ trans('warehouse') }}</th>
-						<th class="text-right">{{ trans('minimum-stock') }}</th>
-						<th class="text-right">{{ trans('available') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for stock in fsc.lowStock %}
-						<tr class="clickableRow table-danger" data-href="{{ stock.url() }}">
-							<td>{{ stock.referencia }}</td>
-							<td>{{ stock.codalmacen }}</td>
-							<td class="text-right">{{ number(stock.stockmin) }}</td>
-							<td class="text-right">{{ number(stock.disponible) }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</div>
-{% endmacro %}
+{% macro sectionLowStock(fsc) %}{% endmacro %}
 
-{% macro sectionNews(fsc) %}
-	{% for news in fsc.news %}
-		<div class="row">
-			<div class="col">
-				<div class="card shadow mb-3">
-					<div class="card-header">
-						<span class="float-right">{{ news.fecha }}</span>
-						<a href="{{ news.url }}" target="_blank">{{ news.title | raw }}</a>
-					</div>
-					<div class="card-body p-3">
-						<div class="form-row align-items-center">
-							<div class="col-auto">
-								<a href="{{ news.url }}" target="_blank" class="btn btn-outline-secondary">
-									<i class="far fa-newspaper fa-3x"></i>
-								</a>
-							</div>
-							<div class="col">{{ news.body | raw }}</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endfor %}
-{% endmacro %}
+{% macro sectionNews(fsc) %}{% endmacro %}
 
 {% macro sectionReceipts(fsc) %}
 	<div class="card shadow mb-3">
 		<div class="p-3">
-			<span class="float-right badge badge-danger">{{ trans('unpaid') }}</span>
+			<span class="float-right badge badge-success">{{ trans('paid') }}</span>
 			<h2 class="h4 mb-0">
 				<i class="fas fa-dollar-sign fa-fw"></i>
 				{{ trans('receipts') }}
@@ -227,19 +136,21 @@
 			<table class="table table-sm table-hover mb-0">
 				<thead>
 					<tr>
-						<th>{{ trans('customer') }}</th>
-						<th>{{ trans('observations') }}</th>
-						<th class="text-right">{{ trans('amount') }}</th>
-						<th class="text-right">{{ trans('expiration') }}</th>
+					<th>{{ trans('creation-date') }}</th>
+                    <th>{{ trans('customer') }}</th>
+                    <th>{{ trans('observations') }}</th>
+                    <th class="text-right">{{ trans('amount') }}</th>
+                    <th class="text-right">{{ trans('customer-invoice') }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for receipt in fsc.receipts %}
-						<tr class="clickableRow table-danger" data-href="{{ receipt.url() }}">
-							<td>{{ receipt.getSubject().nombre | raw }}</td>
-							<td>{{ receipt.observaciones | raw }}</td>
-							<td class="text-right text-nowrap">{{ money(receipt.importe) }}</td>
-							<td class="text-right text-nowrap">{{ receipt.vencimiento }}</td>
+						<tr class="clickableRow" data-href="{{ receipt.url() }}">
+						<td>{{receipt.fecha }}</td>
+                        <td>{{ receipt.getSubject().nombre | raw }}</td>
+                        <td>{{ receipt.observaciones | raw }}</td>
+                        <td class="text-right text-nowrap">{{ money(receipt.importe) }}</td>
+                        <td class="text-right text-nowrap">{{ receipt.codigofactura }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>

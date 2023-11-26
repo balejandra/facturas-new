@@ -270,7 +270,7 @@ class Dashboard extends Controller
     {
         $receiptModel = new ReciboCliente();
         $where = [
-            new DataBaseWhere('pagado', false),
+            new DataBaseWhere('pagado', true),
             new DataBaseWhere('vencimiento', $this->toolBox()->today(), '<'),
             new DataBaseWhere('vencimiento', date('Y-m-d', strtotime('-1 year')), '>')
         ];
