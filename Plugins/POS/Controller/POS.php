@@ -336,9 +336,9 @@ class POS extends Controller
 
         if ($code) {
             $document = self::getPausedDocument($code);
-            $this->printVoucher($document, []);
-
-            $this->buildResponse();
+            $voucher=$this->printVoucher($document, []);
+            $this->setResponse($voucher);
+            //$this->buildResponse();
         }
     }
 

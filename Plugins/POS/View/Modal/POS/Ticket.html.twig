@@ -1,5 +1,6 @@
 <style>
-	.ticket {
+	.ticket,
+	.printer-ticket {
 		font-family: Tahoma, Geneva, sans-serif;
 		font-size: 12px;
 	}
@@ -10,10 +11,6 @@
 	.centrado {
 		text-align: center;
 		align-content: center;
-	}
-	img {
-		max-width: inherit;
-		width: inherit;
 	}
 	.text-center {
 		text-align: center;
@@ -77,110 +74,115 @@
 	</div>
 </div>
 <script id="ticketImpresion" type="text/template">
-	<div class="ticket" style="width:<%=it.items.text.anchoFormato %>%;">
-		<% if(it.items.length === 0) { %>
-			<div class="flex flex-1 rounded-lg bg-blue-100 p-2 shadow-sm md:flex-row">
-				<span>{{ i18n.trans('no-data') }}</span>
-			</div>
-		<% } %>
-		<div id="ticket">
-			<p class="centrado"><%=it.items.text.nombrecorto %>
-				<br><%=it.items.text.direccion %>
-				<br><%=it.items.text.cifnif %></p>
-			<p class="centrado linea-divisora"></p>
-			<p class="centrado">Factura Nro:
-				<%=it.items.text.codigo %>
-				<br><%=it.items.text.fechacompleta %>
-				<br>Cliente:
-				<%=it.items.text.cliente %></p>
-			<p class="centrado linea-divisora"></p>
-			<% if(it.items.text.headerCustomLines.length> 0) { %>
-				<% it.items.text.headerCustomLines.forEach(function(header) { %>
+	<div id="ticketPrint">
+		<div class="ticket" style="width:<%=it.items.text.anchoFormato %>%;">
+			<% if(it.items.length === 0) { %>
+				<div class="flex flex-1 rounded-lg bg-blue-100 p-2 shadow-sm md:flex-row">
+					<span>{{ i18n.trans('no-data') }}</span>
+				</div>
+			<% } else{ %>
+				<div>
+					<p class="centrado"><%=it.items.text.nombrecorto %>
+						<br><%=it.items.text.direccion %>
+						<br><%=it.items.text.cifnif %></p>
+					<p class="centrado linea-divisora"></p>
+					<p class="centrado">Comprobante:
+						<%=it.items.text.codigo %>
+					</p>
 					<p class="centrado">
-						<%=header %></p>
-				<% }) %>
-			<% } %>
-			<br>
-			<table class="printer-ticket">
-				<thead>
-					<tr>
-						<% if(it.items.text.formato_precio=== 3) { %>
-							<th colspan="2">
-								<b>CANT</b>
-							</th>
-							<th colspan="2">
-								<b>ARTICULOS</b>
-							</th>
-						<% }else{ %>
-							<th>
-								<b>CANT</b>
-							</th>
-							<th>
-								<b>ARTICULOS</b>
-							</th>
-							<th>
-								<b>P. UNITARIO</b>
-							</th>
-							<th>
-								<b>IMPORTE</b>
-							</th>
-						<% }%>
-					</tr>
-				</thead>
-				<tbody>
-					<% it.items.text.lines.forEach(function(line) { %>
-						<tr>
-							<% if(it.items.text.formato_precio=== 3) { %>
-								<td colspan="2"><%= line.cantidad %></td>
-								<td colspan="2"><%= line.referencia %></td>
-							<% }else{ %>
-								<td><%= line.cantidad %></td>
-								<td><%= line.referencia %></td>
-								<td><%= line.pvpunitario %></td>
-								<td><%= line.totalunitario %></td>
+						<br><%=it.items.text.fechacompleta %>
+						<br>Cliente:
+						<%=it.items.text.cliente %></p>
+					<p class="centrado linea-divisora"></p>
+					<% if(it.items.text.headerCustomLines.length> 0) { %>
+						<% it.items.text.headerCustomLines.forEach(function(header) { %>
+							<p class="centrado">
+								<%=header %></p>
+						<% }) %>
+					<% } %>
+					<br>
+					<table class="printer-ticket">
+						<thead>
+							<tr>
+								<% if(it.items.text.formato_precio=== 3) { %>
+									<th colspan="2">
+										<b>CANT</b>
+									</th>
+									<th colspan="2">
+										<b>ARTICULOS</b>
+									</th>
+								<% }else{ %>
+									<th>
+										<b>CANT</b>
+									</th>
+									<th>
+										<b>ARTICULOS</b>
+									</th>
+									<th>
+										<b>P. UNITARIO</b>
+									</th>
+									<th>
+										<b>IMPORTE</b>
+									</th>
+								<% }%>
+							</tr>
+						</thead>
+						<tbody>
+							<% it.items.text.lines.forEach(function(line) { %>
+								<tr>
+									<% if(it.items.text.formato_precio=== 3) { %>
+										<td colspan="2"><%= line.cantidad %></td>
+										<td colspan="2"><%= line.referencia %></td>
+									<% }else{ %>
+										<td><%= line.cantidad %></td>
+										<td><%= line.referencia %></td>
+										<td><%= line.pvpunitario %></td>
+										<td><%= line.totalunitario %></td>
+									<% }%>
+								</tr>
+							<% }) %>
+							<tr>
+								<td colspan="4"><br>Total de articulos:
+									<%=it.items.text.totalArticulos %></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<% if(it.items.text.formato_precio!== 3) { %>
+								<tr class="sup p--0">
+									<td colspan="4">
+										<b>Totales</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">Base:</td>
+									<td align="right"><%=it.items.text.neto %></td>
+								</tr>
+								<tr>
+									<td colspan="3">IVA</td>
+									<td align="right"><%=it.items.text.totaliva %></td>
+								</tr>
+								<tr>
+									<td colspan="3">Total:</td>
+									<td align="right"><%=it.items.text.total %></td>
+								</tr>
 							<% }%>
-						</tr>
-					<% }) %>
-					<tr>
-						<td colspan="4"><br>Total de articulos:
-							<%=it.items.text.totalArticulos %></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<% if(it.items.text.formato_precio!== 3) { %>
-						<tr class="sup p--0">
-							<td colspan="4">
-								<b>Totales</b>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3">Base:</td>
-							<td align="right"><%=it.items.text.neto %></td>
-						</tr>
-						<tr>
-							<td colspan="3">IVA</td>
-							<td align="right"><%=it.items.text.totaliva %></td>
-						</tr>
-						<tr>
-							<td colspan="3">Total:</td>
-							<td align="right"><%=it.items.text.total %></td>
-						</tr>
-					<% }%>
-					<tr class="sup">
-						<td colspan="3" align="center">
-							<b>Factura:
-								<%=it.items.text.codigo %></b>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-			<br>
-			<% if(it.items.text.footerCustomLines.length> 0) { %>
-				<% it.items.text.footerCustomLines.forEach(function(footer) { %>
-					<p class="centrado">
-						<%=footer %></p>
-				<% }) %>
-			<% } %>
+							<tr class="sup">
+								<td colspan="3" align="center">
+									<b>Comprobante:
+										<%=it.items.text.codigo %></b>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+					<br>
+					<% if(it.items.text.footerCustomLines.length> 0) { %>
+						<% it.items.text.footerCustomLines.forEach(function(footer) { %>
+							<p class="centrado">
+								<%=footer %></p>
+						<% }) %>
+					<% } %>
+				</div>
+			<% }%>
 		</div>
 	</div>
 </script>

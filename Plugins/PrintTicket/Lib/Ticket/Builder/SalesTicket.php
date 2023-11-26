@@ -21,7 +21,9 @@ namespace FacturaScripts\Plugins\PrintTicket\Lib\Ticket\Builder;
 
 use FacturaScripts\Core\Base\NumberTools;
 use FacturaScripts\Core\Model\Base\SalesDocument;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FormatoTicket;
+use FacturaScripts\Dinamic\Model\OperacionPausada;
 
 class SalesTicket extends AbstractTicketBuilder
 {
@@ -176,19 +178,33 @@ class SalesTicket extends AbstractTicketBuilder
     public function getDataAsArray(): array
     {
         $company = $this->document->getCompany();
+        $codigo='';
+        $formato_precio=0;
+
+        if ($this->document instanceof OperacionPausada) {
+            $codigo = $this->document->idpausada;
+            $formato_precio = 3;
+        } elseif ($this->document instanceof FacturaCliente) {
+            $codigo = $this->document->codigo;
+            $formato_precio = $this->formato->formato_precio;
+        } else {
+            // No es ni una operación pausada ni una factura
+            var_dump('otro tipo');
+        }
+
         $data = [
             'tipo_ticket' => 'sale_ticket',
             'nombrecorto' => $company->nombrecorto,
             'direccion' => $company->direccion,
             'telefono1' => $company->telefono1,
             'cifnif' => $company->cifnif,
-            'codigo' => $this->document->codigo,
+            'codigo' => $codigo,
             'fechacompleta' => $this->document->fecha . ' ' . $this->document->hora,
             'cliente' => $this->document->nombrecliente,
             'neto' => $this->document->neto,
             'totaliva' => $this->document->totaliva,
             'total' => $this->document->total,
-            'formato_precio' => $this->formato->formato_precio,
+            'formato_precio' => $formato_precio,
             'anchoFormato' => $this->formato->ancho,
             'lines' => [],
         ];
