@@ -33,6 +33,11 @@
                     <values title="warehouse">2</values>
                 </widget>
             </column>
+            <column name="Tasa de Cambio" numcolumns="3" order="160">
+                <widget type="select" fieldname="idtasacambio" icon="fas fa-exchange-alt">
+                    <values source="TasaCambio" fieldcode="id" fieldtitle="nombre"/>
+                </widget>
+            </column>
         </group>
         <group name="extra" title="other-settings" numcolumns="12" valign="bottom">
             <column name="ticket-format" numcolumns="3" order="100">

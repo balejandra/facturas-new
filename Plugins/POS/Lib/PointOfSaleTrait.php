@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of POS plugin for FacturaScripts
  * Copyright (C) 2022 Juan José Prieto Dzul <juanjoseprieto88@gmail.com>
@@ -13,6 +14,7 @@ use FacturaScripts\Dinamic\Model\DenominacionMoneda;
 use FacturaScripts\Dinamic\Model\Familia;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\FormatoTicket;
+use FacturaScripts\Plugins\POS\Model\TasaCambio;
 use FacturaScripts\Dinamic\Model\TerminalPuntoVenta;
 use FacturaScripts\Plugins\POS\Model\TipoDocumentoPuntoVenta;
 use FilesystemIterator;
@@ -64,7 +66,7 @@ trait PointOfSaleTrait
         return [];
     }
 
-     /**
+    /**
      * @return array
      */
     public function getCustomDocumentFields(string $hook): array
@@ -96,7 +98,7 @@ trait PointOfSaleTrait
         foreach ($fileIterator as $filename) {
             if ($filename->isDir()) continue;
 
-            if (! strpos($filename->getFilename(), '.html.twig')) continue;
+            if (!strpos($filename->getFilename(), '.html.twig')) continue;
 
             $modals[] = $extensionPath . DIRECTORY_SEPARATOR . $filename->getFilename();
         }
@@ -113,6 +115,17 @@ trait PointOfSaleTrait
         $customer->loadFromCode($this->getTerminal()->codcliente);
 
         return $customer;
+    }
+
+    /**
+     * @return TasaCambio
+     */
+    public function getTasaCambio(): TasaCambio
+    {
+        $tasa = new TasaCambio();
+        $tasa->loadFromCode($this->getTerminal()->idtasacambio);
+
+        return $tasa;
     }
 
     /**

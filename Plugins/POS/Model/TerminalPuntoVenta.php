@@ -27,7 +27,7 @@ class TerminalPuntoVenta extends Base\ModelClass
     public $aceptapagos;
     public $codalmacen;
     public $codcliente;
-    public $codserie;    
+    public $codserie;
     public $comandoapertura;
     public $comandocorte;
     public $defaultdocument;
@@ -36,25 +36,26 @@ class TerminalPuntoVenta extends Base\ModelClass
 
     public $idformatoticket;
 
-    public $idterminal;   
-    public $nombre; 
+    public $idterminal;
+    public $nombre;
     public $numerotickets;
     public $productsource;
     public $restringealmacen;
 
     public $productolibre;
+    public $idtasacambio;
 
     public function clear()
     {
         parent::clear();
-        
+
         $this->aceptapagos = true;
         $this->anchopapel = 45;
         $this->restringealmacen = false;
         $this->defaultdocument = 'FacturaCliente';
         $this->disponible = true;
         $this->numerotickets = 1;
-    } 
+    }
 
     public static function primaryColumn(): string
     {

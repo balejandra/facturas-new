@@ -84,6 +84,11 @@
             'token': '{{ fsc.getNewToken() }}',
             'url': 'POS',
             'codalmacen': '{{ fsc.getDefaultWarehouse() }}',
+            'tasacambio': {
+                'codtasa': '{{ fsc.getTasaCambio().id }}',
+                'destinotasa': '{{ fsc.getTasaCambio().coddivisadestino }}',
+                'importetasa': '{{ fsc.getTasaCambio().tasacambio }}'
+            },
             'customer': {
                 'codcliente': '{{ fsc.getDefaultCustomer().codcliente }}',
                 'nombre': '{{ fsc.getDefaultCustomer().nombre }}'

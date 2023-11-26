@@ -75,6 +75,9 @@ const checkoutElements = {
     'changeAmountLabel': getElement('checkoutChangeAmount'),
     'tenderedAmountLabel': getElement('checkoutTenderedAmount'),
     'totalAmountLabel': getElement('checkoutTotal'),
+    'changeAmountExchangeLabel': getElement('checkoutChangeAmountExchange'),
+    'tenderedAmountExchangeLabel': getElement('checkoutTenderedAmountExchange'),
+    'totalAmountExchangeLabel': getElement('checkoutTotalExchange'),
     'paymentApplyButton': getElement('paymentApplyButton'),
     'paymentApplyInput': getElement('paymentApplyInput'),
 }
@@ -84,6 +87,9 @@ class Checkout {
     changeAmountLabel = () => checkoutElements['changeAmountLabel'];
     tenderedAmountLabel = () => checkoutElements['tenderedAmountLabel'];
     totalAmountLabel = () => checkoutElements['totalAmountLabel'];
+    changeAmountExchangeLabel = () => checkoutElements['changeAmountExchangeLabel'];
+    tenderedAmountExchangeLabel = () => checkoutElements['tenderedAmountExchangeLabel'];
+    totalAmountExchangeLabel = () => checkoutElements['totalAmountExchangeLabel'];
     paymentApplyButton = () => checkoutElements['paymentApplyButton'];
     paymentAmountInput = () => checkoutElements['paymentApplyInput'];
 
@@ -101,8 +107,17 @@ class Checkout {
 
     updateView = (data) => {
         checkout().totalAmountLabel().textContent = data.total;
+        checkout().totalAmountExchangeLabel().textContent = Money.roundFixed(
+			data.total * AppSettings.tasacambio.importetasa
+		);
         checkout().tenderedAmountLabel().textContent = data.getPaymentsTotal();
+        checkout().tenderedAmountExchangeLabel().textContent = Money.roundFixed(
+			data.getPaymentsTotal() * AppSettings.tasacambio.importetasa
+		);
         checkout().changeAmountLabel().textContent = data.change;
+        checkout().changeAmountExchangeLabel().textContent = Money.roundFixed(
+			data.change * AppSettings.tasacambio.importetasa
+		);
 
         templates().renderPaymentList(data);
 
