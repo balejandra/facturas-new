@@ -271,10 +271,8 @@ class Dashboard extends Controller
         $receiptModel = new ReciboCliente();
         $where = [
             new DataBaseWhere('pagado', true),
-            new DataBaseWhere('vencimiento', $this->toolBox()->today(), '<'),
-            new DataBaseWhere('vencimiento', date('Y-m-d', strtotime('-1 year')), '>')
         ];
-        $this->receipts = $receiptModel->all($where, ['vencimiento' => 'DESC']);
+        $this->receipts = $receiptModel->all($where, ['fecha' => 'DESC'],0,15);
 
         if (count($this->receipts) > 0) {
             $this->sections[] = 'receipts';
