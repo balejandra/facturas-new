@@ -14,7 +14,7 @@
 					<img class="w-full m-1 rounded-lg h-40 object-fill" src="{{ product.image }}" alt="{{ product.code }}" data-action="productImageAction" data-id="{{ product.id }}" data-code="{{ product.code }}">
 				{% else %}
 					<span>
-						<i class="fas fa-3x fa-box"></i>
+						<i class="fas fa-10x fa-box"></i>
 					</span>
 				{% endif %}
 
@@ -22,7 +22,7 @@
 					<h4 class="text-center mb-3 text-l font-semibold tracking-tight uppercase text-gray-800">{{ product.code }}</h4>
 				</div>
 				<div class="flex items-center justify-between leading-tight p-2 md:p-4">
-					<span class="mt-1 inline-block text-left rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-[0.85rem] pointer-events-auto" data-action="stockDetailAction" data-code="{{ product.code }}">
+					<span class="mt-1 inline-block text-left rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-xs pointer-events-auto" data-action="stockDetailAction" data-code="{{ product.code }}">
 						{{ product.stock | default('0') }}
 						{{ i18n.trans('available') }}
 					</span>
@@ -48,7 +48,7 @@
 				<img class="w-full m-1 rounded-lg h-40 object-fill" src="<%= item.image %>" alt="<%= item.code %>" data-action="productImageAction" data-id="<%= item.id %>" data-code="<%= item.code %>">
 			<% } else { %>
 				<span>
-					<i class="fas fa-3x fa-box"></i>
+					<i class="fas fa-10x fa-box"></i>
 				</span>
 			<% } %>
 
@@ -57,7 +57,7 @@
 					<%= item.code %></h4>
 			</div>
 			<div class="flex items-center justify-between leading-tight p-2 md:p-4">
-				<span class="mt-1 inline-block text-left rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-[0.85rem] pointer-events-auto" data-action="stockDetailAction" data-code="{{ element.code }}">
+				<span class="mt-1 inline-block text-left rounded-full bg-blue-100 px-3 font-semibold text-blue-800 text-xs pointer-events-auto" data-action="stockDetailAction" data-code="{{ element.code }}">
 					<%= item.stock | 0 %>
 					{{ i18n.trans('available') }}
 				</span>

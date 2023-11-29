@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Backup plugin for FacturaScripts
  * Copyright (C) 2021-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
@@ -20,9 +21,13 @@
 namespace FacturaScripts\Plugins\Backup\Controller;
 
 use Coderatio\SimpleBackup\SimpleBackup;
-use FacturaScripts\Core\Base\Controller;
+use Exception;
+use Google\Client;
+use Google\Service\Drive;
+use FacturaScripts\Core\Base\FileManager;
 use FacturaScripts\Core\Base\ControllerPermissions;
 use FacturaScripts\Dinamic\Model\User;
+use Google\Service\Drive\DriveFile;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -30,14 +35,57 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use ZipArchive;
+use FacturaScripts\Core\Lib\ExtendedController\PanelController;
+use FacturaScripts\Plugins\Backup\Model\CarpetaGoogleDrive;
+use FacturaScripts\Core\Tools;
 
 /**
  * Backup and restore database and user files of application
  *
  * @author Carlos García Gómez <carlos@facturascripts.com>
  */
-class Backup extends Controller
+class Backup  extends PanelController
 {
+
+    protected function createViewListCarpet(string $viewName = 'ListCarpetaGoogleDrive')
+    {
+        $this->addListView($viewName, 'CarpetaGoogleDrive', 'Carpeta Drive', 'fas fa-folder');
+        $this->views[$viewName]->addOrderBy(['id'], 'id');
+        $this->views[$viewName]->addSearchFields(['idgoogledrive']);
+    }
+
+    protected function createViewHtml(string $viewName = 'Backup')
+    {
+        $this->addHtmlView($viewName, 'Tab/Backup', 'CarpetaGoogleDrive', 'backup', 'fas fa-download');
+    }
+
+    /**
+     * Load views
+     */
+    protected function createViews()
+    {
+        $this->setTemplate('EditSettings');
+        $this->createViewListCarpet();
+        $this->createViewHtml();
+
+        //$this->setTabsPosition('bottom');
+    }
+
+    protected function loadData($viewName, $view)
+    {
+        $this->hasData = true;
+
+        switch ($viewName) {
+            case 'Backup':
+                $this->defaultChecks();
+                break;
+
+            case 'ListCarpetaGoogleDrive':
+                $view->loadData();
+                break;
+        }
+    }
+
 
     /**
      * Return the max file size that can be uploaded.
@@ -57,6 +105,9 @@ class Backup extends Controller
         $data['icon'] = 'fas fa-download';
         return $data;
     }
+
+
+
 
     /**
      * Runs the controller's private logic.
@@ -81,6 +132,10 @@ class Backup extends Controller
 
             case 'restore-backup':
                 $this->restoreBackupAction();
+                break;
+
+            case 'backup-upload-drive':
+                $this->backupAndUploadToDrive();
                 break;
 
             default:
@@ -215,5 +270,110 @@ class Backup extends Controller
         }
 
         return $zip->close();
+    }
+
+    private function backupAndUploadFilesToDrive(): void
+    {
+        $localBackupPath = FS_FOLDER . '/MyFiles/Backup/';
+        if (false === FileManager::createFolder($localBackupPath, true)) {
+            $this->toolBox()->i18nLog()->critical('cant-create-folder', ['%folderName%' => $localBackupPath]);
+            return;
+        }
+
+        /******FILES**********/
+
+        // Nombre del archivo de copia de seguridad
+        $backupFileName = 'backup_' . date('Y-m-d_H-i-s') . '.zip';
+        $localBackupFile = $localBackupPath . $backupFileName;
+
+        // Realizar la copia de seguridad local
+        $this->zipFolder($localBackupFile);
+
+        // Subir la copia de seguridad a Google Drive
+        $this->uploadToDrive($localBackupFile, $backupFileName, 'Backup Archivos Facturas');
+    }
+
+    private function backupAndUploadDBToDrive()
+    {
+        $localBackupPath = FS_FOLDER . '/MyFiles/Backup/';
+        if (false === FileManager::createFolder($localBackupPath, true)) {
+            $this->toolBox()->i18nLog()->critical('cant-create-folder', ['%folderName%' => $localBackupPath]);
+            return;
+        }
+        /******DB**********/
+        if (FS_DB_TYPE != 'mysql') {
+            self::toolBox()::log()->error('mysql-support-only');
+            return;
+        }
+
+        if (false === extension_loaded('pdo_mysql')) {
+            self::toolBox()::log()->error('pdo-mysql-support-only');
+            return;
+        }
+
+        $this->setTemplate(false);
+        $simpleBackupDB = SimpleBackup::setDatabase([FS_DB_NAME, FS_DB_USER, FS_DB_PASS, FS_DB_HOST])
+            ->storeAfterExportTo($localBackupPath, FS_DB_NAME . '_' . date('Y-m-d_H-i-s'));
+        $localBackupDB = $localBackupPath . $simpleBackupDB->getExportedName();
+        $this->uploadToDrive($localBackupDB, $simpleBackupDB->getExportedName(), 'Backup Base de Datos Facturas');
+    }
+
+    private function uploadToDrive(string $localFilePath, string $fileName, string $description): void
+    {
+        $idfolder = '';
+        $folderDrive = new CarpetaGoogleDrive();
+        // Obtener todos los registros de 'CarpetaGoogleDrive' en la base de datos
+        $folderRecords = $folderDrive->all([], [], 0, 1);
+        if (!empty($folderRecords)) {
+            $firstFolder = $folderRecords[0];
+            $idfolder = $firstFolder->idgoogledrive;
+        } else {
+            $this->toolBox()->i18nLog()->error(
+                'No existen registros de Carpeta Google Drive en la base de datos'
+            );
+            return;
+        }
+
+        $claveJSON = $idfolder;
+        $pathJSON = FS_FOLDER . '/MyFiles/' . 'credentials.json';
+
+        $client = new Client();
+        $client->setAuthConfig($pathJSON);
+        //  $client->setAccessToken($this->checkAccessToken());
+        $client->useApplicationDefaultCredentials();
+        $client->setScopes(['https://www.googleapis.com/auth/drive.file']);
+        try {
+            //instanciamos el servicio
+            $service = new Drive($client);
+
+            //instacia de archivo
+            $file = new DriveFile();
+            $file->setName($fileName);
+
+            //id de la carpeta donde hemos dado el permiso a la cuenta de servicio
+            $file->setParents(array($claveJSON));
+            $file->setDescription($description);
+            $result = $service->files->create(
+                $file,
+                array(
+                    'data' => file_get_contents($localFilePath),
+                    'mimeType' => 'application/octet-stream',
+                    'uploadType' => 'media',
+                )
+            );
+            if ($result) {
+                $this->toolBox()->i18nLog()->info('Backup Almacenado Exitosamente');
+                unlink($localFilePath);
+            }
+        } catch (Exception $e) {
+            Tools::log()->error('Ha ocurrido un error: ' . $e->getMessage());
+        }
+    }
+
+
+    private function backupAndUploadToDrive(): void
+    {
+        $this->backupAndUploadFilesToDrive();
+        $this->backupAndUploadDBToDrive();
     }
 }

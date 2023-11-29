@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view>
+    <columns>
+        <column name="id" display="center" order="100">
+            <widget type="text" fieldname="id" readonly="true"/>
+        </column>
+        <column name="idgoogledrive" display="center" order="110">
+            <widget type="text" fieldname="idgoogledrive" maxlength="25" required="true"/>
+        </column>
+        <column name="name" display="" order="120">
+            <widget type="text" fieldname="name" maxlength="100"/>
+        </column>
+        <column name="creation-date" display="none" order="130">
+            <widget type="datetime" fieldname="creationdate" required="true"/>
+        </column>
+        <column name="user" order="140">
+            <widget type="select" fieldname="nick" >
+                <values source="users" fieldcode="nick" filedtile="nick"/>
+            </widget>
+        </column>
+        <column name="last-update" display="none" order="150">
+            <widget type="datetime" fieldname="lastupdate"/>
+        </column>
+        <column name="last-user" order="160">
+            <widget type="select" fieldname="lastnick" >
+                <values source="users" fieldcode="nick" filedtile="nick"/>
+            </widget>
+        </column>
+    </columns>
+</view>

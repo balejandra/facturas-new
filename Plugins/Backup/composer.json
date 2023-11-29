@@ -9,11 +9,20 @@
     ],
     "config": {
         "platform": {
-            "php": "7.2.5"
+            "php": "8.0"
         }
     },
     "require": {
         "coderatio/simple-backup": "1.0.*",
-      "ext-zip": "*"
+        "ext-zip": "*",
+        "google/apiclient": "^2.15.0"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Drive"
+        ]
     }
 }
