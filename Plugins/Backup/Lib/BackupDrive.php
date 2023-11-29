@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FacturaScripts\Plugins\Backup\Controller;
+namespace FacturaScripts\Plugins\Backup\Lib;
 
 use Coderatio\SimpleBackup\SimpleBackup;
 use Exception;
