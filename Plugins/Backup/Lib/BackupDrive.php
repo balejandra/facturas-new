@@ -137,7 +137,7 @@ class BackupDrive
 
     public function backupAndUploadToDrive(): void
     {
-        $this->backupAndUploadFilesToDrive();
+       // $this->backupAndUploadFilesToDrive();
         $this->backupAndUploadDBToDrive();
     }
 }
