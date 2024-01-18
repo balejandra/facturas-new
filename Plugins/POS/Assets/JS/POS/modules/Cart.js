@@ -200,11 +200,3 @@ document.addEventListener('onCartChange', onChangeCartAction);
 document.addEventListener('onCartUpdate', onUpdateCartAction);
 
 export default Cart;
-
-
-
-
-
-
-
-

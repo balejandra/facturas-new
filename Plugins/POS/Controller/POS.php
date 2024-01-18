@@ -20,6 +20,7 @@ use FacturaScripts\Plugins\POS\Lib\PointOfSaleTransaction;
 use FacturaScripts\Plugins\POS\Model\MovimientoPuntoVenta;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class POS extends Controller
 {
     use PointOfSaleTrait;
@@ -354,7 +355,7 @@ class POS extends Controller
 
         if ($code) {
             $document = self::getPausedDocument($code);
-            $voucher=$this->printVoucher($document, []);
+            $voucher = $this->printVoucher($document, []);
             $this->setResponse($voucher);
             //$this->buildResponse();
         }
@@ -366,9 +367,10 @@ class POS extends Controller
 
         $taxID = $this->request->request->get('taxID');
         $name = $this->request->request->get('name');
+        $email = $this->request->request->get('email');
         $result = [];
 
-        if ($customer->saveNew($taxID, $name)) {
+        if ($customer->saveNew($taxID, $name, $email)) {
             self::toolBox()::log()->info('Nuevo cliente registrado');
             $result = ['customer' => $customer->getCustomer()];
             //$this->setResponse($customer->getCustomer());
@@ -408,7 +410,7 @@ class POS extends Controller
 
         $request = new PointOfSaleRequest($this->request);
         $transaction = new PointOfSaleTransaction($request);
-
+        var_dump($request);
         if ($this->pipeFalse('saveRequest', $this->request) === false) {
             return;
         }
@@ -435,6 +437,7 @@ class POS extends Controller
 
         $this->getSession()->savePayments($document, $transaction->getPayments());
         $this->pipe('save', $document, $transaction->getPayments());
+
         $voucher = $this->printVoucher($document, $transaction->getPayments());
         $this->setResponse($voucher);
     }

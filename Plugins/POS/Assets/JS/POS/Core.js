@@ -43,12 +43,13 @@ export function printClosingVoucher() {
  * @param {string} taxID
  * @param {string} name
  */
-export function saveNewCustomer(taxID, name) {
+export function saveNewCustomer(taxID, name, email) {
     const data = new FormData();
 
     data.set('action', 'save-new-customer');
     data.set('taxID', taxID);
     data.set('name', name);
+    data.set("email", email);
 
     return postRequest(data);
 }

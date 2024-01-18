@@ -88,7 +88,8 @@ async function orderSuspendAction() {
 async function saveCustomerAction() {
 	const taxID = Core.getElement("newCustomerTaxID").value;
 	const name = Core.getElement("newCustomerName").value;
-	const response = await Core.saveNewCustomer(taxID, name);
+	const email = Core.getElement("newCustomerEmail").value;
+	const response = await Core.saveNewCustomer(taxID, name, email);
 
 	if (response.customer.codcliente) {
 		Cart.setCustomer(response.customer.codcliente);

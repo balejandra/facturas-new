@@ -37,11 +37,12 @@ class PointOfSaleCustomer
      * @param string $name
      * @return bool
      */
-    public function saveNew(string $taxID, string $name): bool
+    public function saveNew(string $taxID, string $name, string $email): bool
     {
         $this->customer->cifnif = $taxID;
         $this->customer->nombre = $name;
         $this->customer->razonsocial = $name;
+        $this->customer->email = $email;
 
         return $this->customer->save();
     }
