@@ -12,6 +12,7 @@ use FacturaScripts\Core\Base\ControllerPermissions;
 use FacturaScripts\Dinamic\Model\User;
 use FacturaScripts\Plugins\POS\Lib\PointOfSaleActionsTrait;
 use FacturaScripts\Plugins\POS\Lib\PointOfSaleCustomer;
+use FacturaScripts\Plugins\POS\Lib\PointOfSaleInvoiceNotification;
 use FacturaScripts\Plugins\POS\Lib\PointOfSaleProduct;
 use FacturaScripts\Plugins\POS\Lib\PointOfSaleRequest;
 use FacturaScripts\Plugins\POS\Lib\PointOfSaleSession;
@@ -437,7 +438,12 @@ class POS extends Controller
 
         $this->getSession()->savePayments($document, $transaction->getPayments());
         $this->pipe('save', $document, $transaction->getPayments());
-
+        $emailPoint = new PointOfSaleInvoiceNotification();
+        if ($emailPoint->sendInvoiceNotification($document)) {
+            $this->toolBox()->i18nLog()->info('send-mail-ok');
+        } else {
+            $this->toolBox()->i18nLog()->warning('send-mail-error');
+        }
         $voucher = $this->printVoucher($document, $transaction->getPayments());
         $this->setResponse($voucher);
     }
