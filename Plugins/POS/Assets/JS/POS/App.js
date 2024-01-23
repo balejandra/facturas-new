@@ -89,8 +89,9 @@ async function saveCustomerAction() {
 	const taxID = Core.getElement("newCustomerTaxID").value;
 	const name = Core.getElement("newCustomerName").value;
 	const email = Core.getElement("newCustomerEmail").value;
-	const response = await Core.saveNewCustomer(taxID, name, email);
-
+	const phone = Core.getElement("newCustomerPhone").value;
+	const response = await Core.saveNewCustomer(taxID, name, email, phone);
+	console.log(response);
 	if (response.customer.codcliente) {
 		Cart.setCustomer(response.customer.codcliente);
 		View.main().updateCustomerNameLabel(response.customer.razonsocial);

@@ -369,9 +369,10 @@ class POS extends Controller
         $taxID = $this->request->request->get('taxID');
         $name = $this->request->request->get('name');
         $email = $this->request->request->get('email');
+        $phone = $this->request->request->get('phone');
         $result = [];
 
-        if ($customer->saveNew($taxID, $name, $email)) {
+        if ($customer->saveNew($taxID, $name, $email, $phone)) {
             self::toolBox()::log()->info('Nuevo cliente registrado');
             $result = ['customer' => $customer->getCustomer()];
             //$this->setResponse($customer->getCustomer());
