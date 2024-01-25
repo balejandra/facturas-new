@@ -6,6 +6,7 @@ use FacturaScripts\Core\Lib\Email\MailNotifier;
 use FacturaScripts\Dinamic\Lib\Export\PDFExport;
 use FacturaScripts\Core\Model\Base\SalesDocument;
 use FacturaScripts\Core\Model\Cliente;
+use FacturaScripts\Core\Model\Empresa;
 use FacturaScripts\Core\Model\FacturaCliente;
 
 class PointOfSaleInvoiceNotification
@@ -18,6 +19,13 @@ class PointOfSaleInvoiceNotification
         $cliente = new Cliente();
         $cliente->loadFromCode($document->codcliente);
         $factura = new FacturaCliente();
+        $company = new Empresa();
+        if (false === $company->loadFromCode($document->idempresa)) {
+            return;
+        }
+        $nombreCompany=$company->nombre;
+        $addressCompany = $company->direccion;
+
         if ($factura->loadFromCode($document->idfactura)) {
             $factura->editable = false;
             $factura->idestado = (int)11;
@@ -26,10 +34,11 @@ class PointOfSaleInvoiceNotification
             $pdf->addBusinessDocPage($factura);
             $file_pdf = self::FILE_NAME . $document->codigo . 'email.pdf';
             if (file_put_contents($file_pdf, $pdf->getDoc())) {
-
                 $email = MailNotifier::send('sendmail-FacturaCliente', $cliente->email, $cliente->nombre, [
                     'code' => $factura->codigo,
-                    'date' => $factura->fecha
+                    'date' => $factura->fecha,
+                    'nameCompany'=>$nombreCompany,
+                    'addressCompany'=>$addressCompany
                 ], [$file_pdf]);
                 if ($email) {
                     // Eliminar el archivo después de enviar el correo si es necesario
