@@ -440,12 +440,12 @@ class POS extends Controller
         $this->getSession()->savePayments($document, $transaction->getPayments());
         $this->pipe('save', $document, $transaction->getPayments());
         //var_dump($document);
-        $emailPoint = new PointOfSaleInvoiceNotification();
+        /* $emailPoint = new PointOfSaleInvoiceNotification();
         if ($emailPoint->sendInvoiceNotification($document)) {
             $this->toolBox()->i18nLog()->info('send-mail-ok');
         } else {
             $this->toolBox()->i18nLog()->warning('send-mail-error');
-        }
+        }*/
         $voucher = $this->printVoucher($document, $transaction->getPayments());
         $this->setResponse($voucher);
     }
